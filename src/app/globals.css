@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-pastel-primary: #FFE4E1;
+  --color-pastel-secondary: #E6E6FA;
+  --color-pastel-accent: #F0E68C;
+  --color-pastel-pink: #FFB6C1;
+  --color-pastel-blue: #ADD8E6;
+  --color-pastel-green: #98FB98;
+  --color-pastel-yellow: #FFFFE0;
+  --color-pastel-purple: #DDA0DD;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom utilities for pastel colors */
+.bg-pastel-primary { background-color: var(--color-pastel-primary); }
+.bg-pastel-secondary { background-color: var(--color-pastel-secondary); }
+.bg-pastel-accent { background-color: var(--color-pastel-accent); }
+.bg-pastel-pink { background-color: var(--color-pastel-pink); }
+.bg-pastel-blue { background-color: var(--color-pastel-blue); }
+.bg-pastel-green { background-color: var(--color-pastel-green); }
+.bg-pastel-yellow { background-color: var(--color-pastel-yellow); }
+.bg-pastel-purple { background-color: var(--color-pastel-purple); }
+
+.text-pastel-primary { color: var(--color-pastel-primary); }
+.text-pastel-secondary { color: var(--color-pastel-secondary); }
+.text-pastel-accent { color: var(--color-pastel-accent); }
+.text-pastel-pink { color: var(--color-pastel-pink); }
+.text-pastel-blue { color: var(--color-pastel-blue); }
+.text-pastel-green { color: var(--color-pastel-green); }
+.text-pastel-yellow { color: var(--color-pastel-yellow); }
+.text-pastel-purple { color: var(--color-pastel-purple); }
+
+.border-pastel-primary { border-color: var(--color-pastel-primary); }
+.border-pastel-secondary { border-color: var(--color-pastel-secondary); }
+.border-pastel-accent { border-color: var(--color-pastel-accent); }
+.border-pastel-pink { border-color: var(--color-pastel-pink); }
+.border-pastel-blue { border-color: var(--color-pastel-blue); }
+.border-pastel-green { border-color: var(--color-pastel-green); }
+.border-pastel-yellow { border-color: var(--color-pastel-yellow); }
+.border-pastel-purple { border-color: var(--color-pastel-purple); }

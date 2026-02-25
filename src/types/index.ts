@@ -1,0 +1,51 @@
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  description?: string;
+  category?: string;
+  inStock: boolean;
+}
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface MarzPayRequest {
+  amount: number;
+  phone_number: string;
+  country: string;
+  reference: string;
+  description: string;
+  callback_url: string;
+}
+
+export interface MarzPayResponse {
+  success: boolean;
+  transaction_id?: string;
+  status?: string;
+  message?: string;
+  error?: string;
+}
+
+export interface User {
+  email: string;
+  password: string;
+  isAdmin?: boolean;
+}
+
+export interface Order {
+  id: string;
+  items: CartItem[];
+  total: number;
+  customerInfo: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  status: 'pending' | 'paid' | 'failed';
+  paymentMethod?: string;
+  createdAt: Date;
+}

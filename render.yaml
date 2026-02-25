@@ -1,0 +1,33 @@
+services:
+  # Web Service for Mami Papa Babies & Kids Store
+  - type: web
+    name: mami-paba-store
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      # Node.js Version
+      - key: NODE_VERSION
+        value: 18
+      # Public Variables (accessible in browser)
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+        generateValue: https://mami-paba-store.onrender.com
+      - key: NEXT_PUBLIC_META_PIXEL_ID
+        sync: false
+        generateValue: 2621239424886813
+      - key: NEXT_PUBLIC_GOOGLE_ADS_ID
+        sync: false
+        generateValue: AW-17957602155
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        sync: false
+        generateValue: +256783468608
+      # Private Variables (server-side only)
+      - key: MARZPAY_API_URL
+        sync: false
+        generateValue: https://wallet.wearemarz.com/api/v1
+      - key: MARZPAY_API_CREDENTIALS
+        sync: false
+        generateValue: your_base64_encoded_credentials
