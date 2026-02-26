@@ -275,14 +275,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Categories Section */}
-        <section className="mb-12">
-          <Categories 
-            selectedCategory={selectedCategory}
-            onCategorySelect={handleCategorySelect}
-          />
-        </section>
-
+        
         {/* Products Section */}
         <section id="products">
           <div className="mb-8">
