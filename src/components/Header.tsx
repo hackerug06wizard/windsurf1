@@ -2,17 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Menu, X } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { CartItem } from '@/types';
 import { formatPrice } from '@/lib/utils';
+
+const CATEGORIES = [
+  { id: 'feeding', name: 'Baby Feeding' },
+  { id: 'clothing', name: 'Baby Clothes' },
+  { id: 'toys', name: 'Toys' },
+  { id: 'strollers', name: 'Strollers & Car Seats' },
+  { id: 'health', name: 'Health & Safety' },
+  { id: 'bath', name: 'Bath Time' },
+  { id: 'nursery', name: 'Nursery' },
+  { id: 'electronics', name: 'Baby Electronics' },
+];
 
 interface HeaderProps {
   cartItems: CartItem[];
   onCartClick: () => void;
+  onCategorySelect?: (categoryId: string) => void;
 }
 
-export default function Header({ cartItems, onCartClick }: HeaderProps) {
+export default function Header({ cartItems, onCartClick, onCategorySelect }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -48,6 +61,40 @@ export default function Header({ cartItems, onCartClick }: HeaderProps) {
             <Link href="/" className="text-gray-700 hover:text-pink-600 transition-colors">
               Home
             </Link>
+            
+            {/* Categories Dropdown */}
+            <div className="relative">
+              <button
+                onMouseEnter={() => setIsCategoriesOpen(true)}
+                onMouseLeave={() => setIsCategoriesOpen(false)}
+                className="flex items-center space-x-1 text-gray-700 hover:text-pink-600 transition-colors"
+              >
+                <span>Categories</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              
+              {isCategoriesOpen && (
+                <div 
+                  onMouseEnter={() => setIsCategoriesOpen(true)}
+                  onMouseLeave={() => setIsCategoriesOpen(false)}
+                  className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50"
+                >
+                  {CATEGORIES.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => {
+                        onCategorySelect?.(category.id);
+                        setIsCategoriesOpen(false);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition-colors"
+                    >
+                      {category.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            
             <Link href="/products" className="text-gray-700 hover:text-pink-600 transition-colors">
               Products
             </Link>

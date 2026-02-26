@@ -212,6 +212,7 @@ export default function Home() {
       <Header
         cartItems={cartItems}
         onCartClick={() => setIsCartOpen(true)}
+        onCategorySelect={handleCategorySelect}
       />
       
       <main className="container mx-auto px-4 py-8">

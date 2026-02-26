@@ -31,21 +31,23 @@ export interface MarzPayResponse {
 }
 
 export interface User {
+  id: string;
+  name: string;
   email: string;
+  phone: string;
   password: string;
   isAdmin?: boolean;
+  createdAt: string;
 }
 
 export interface Order {
   id: string;
   items: CartItem[];
   total: number;
-  customerInfo: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  status: 'pending' | 'paid' | 'failed';
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  status: 'pending' | 'completed' | 'cancelled';
   paymentMethod?: string;
-  createdAt: Date;
+  createdAt: string;
 }
