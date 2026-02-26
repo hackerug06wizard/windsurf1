@@ -10,9 +10,10 @@ interface CheckoutProps {
   items: CartItem[];
   onClose: () => void;
   onSuccess: () => void;
+  onCheckout?: () => void;
 }
 
-export default function Checkout({ isOpen, items, onClose, onSuccess }: CheckoutProps) {
+export default function Checkout({ isOpen, items, onClose, onSuccess, onCheckout }: CheckoutProps) {
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
