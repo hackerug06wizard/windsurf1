@@ -1,0 +1,14 @@
+[00:05:55.235] Server  LOG     ✓ Finished writing to filesystem cache in 10.8s
+[00:05:55.490] Server  LOG     ✓ Ready in 241.3s
+[00:19:33.422] Server  LOG     ✓ Finished writing to filesystem cache in 10.5s
+[00:36:58.064] Server  LOG     ○ Compiling / ...
+[00:39:05.640] Server  LOG     ✓ Finished writing to filesystem cache in 76s
+[00:40:59.871] Server  LOG     ✓ Finished writing to filesystem cache in 52s
+[00:42:51.820] Server  LOG     ✓ Finished writing to filesystem cache in 33.7s
+[00:44:34.327] Server  LOG     ✓ Finished writing to filesystem cache in 22.0s
+[00:47:12.680] Server  LOG     ✓ Finished writing to filesystem cache in 67s
+[00:47:14.793] Server  LOG     ○ Compiling /_error ...
+[00:49:13.819] Server  LOG     ✓ Finished writing to filesystem cache in 15.5s
+[00:50:03.450] Server  LOG     ✓ Finished writing to filesystem cache in 22.9s
+[00:52:28.981] Server  LOG     ✓ Finished writing to filesystem cache in 18.5s
+[00:54:21.320] Server  LOG     ✓ Finished filesystem cache database compaction in 3.0min

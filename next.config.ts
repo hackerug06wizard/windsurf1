@@ -1,17 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable static export for ByetHost compatibility
-  output: 'export',
-  // Disable image optimization for static hosting
-  images: {
-    unoptimized: true,
-  },
-  // Set trailing slash for better static hosting
-  trailingSlash: true,
-  // Optional: Set base path if deploying to subdirectory
-  // basePath: '/store',
+  // Standard Next.js configuration for Render deployment
   reactCompiler: true,
+  // Image optimization works on Render
+  images: {
+    domains: ['localhost'],
+  },
 };
 
 export default nextConfig;

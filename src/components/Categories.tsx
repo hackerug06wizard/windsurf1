@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Baby, Shirt, Bottle, Car, Heart, Camera, Stethoscope, Gamepad2 } from 'lucide-react';
+import { Baby, Shirt, Droplet, Car, Heart, Camera, Stethoscope, Gamepad2 } from 'lucide-react';
 
 interface Category {
   id: string;
@@ -15,7 +15,7 @@ const categories: Category[] = [
   {
     id: 'feeding',
     name: 'Baby Feeding',
-    icon: <Bottle className="h-6 w-6" />,
+    icon: <Droplet className="h-6 w-6" />,
     count: 12,
     color: 'bg-pink-100 text-pink-600 hover:bg-pink-200',
   },
