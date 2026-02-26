@@ -62,22 +62,31 @@ function generateUUID(): string {
 // Create a collection
 export async function createCollection(request: MarzPayRequest): Promise<MarzPayResponse> {
   try {
+    const formData = new FormData();
+    formData.append('phone_number', request.phone_number);
+    formData.append('amount', request.amount.toString());
+    formData.append('country', request.country);
+    formData.append('reference', request.reference || generateUUID());
+    if (request.description) {
+      formData.append('description', request.description);
+    }
+    if (request.callback_url) {
+      formData.append('callback_url', request.callback_url);
+    } else {
+      formData.append('callback_url', 'https://mami-papa-store.onrender.com/api/payment-webhook');
+    }
+
     const response = await fetch(`${API_BASE_URL}/collect-money`, {
       method: 'POST',
       headers: {
         'Authorization': authHeader,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...request,
-        // Ensure reference is a valid UUID
-        reference: request.reference || generateUUID(),
-        // Set default callback URL if not provided
-        callback_url: request.callback_url || 'https://mami-papa-store.onrender.com/api/payment-webhook',
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Marzpay API error response:', errorText);
       throw new Error(`Marzpay API error: ${response.status} ${response.statusText}`);
     }
 

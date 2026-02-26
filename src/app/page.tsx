@@ -6,10 +6,13 @@ import ProductGrid from '@/components/ProductGrid';
 import Cart from '@/components/Cart';
 import Checkout from '@/components/Checkout';
 import MarzPayPayment from '@/components/MarzPayPayment';
+import Auth from '@/components/Auth';
+import ProductFilter from '@/components/ProductFilter';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import Categories from '@/components/Categories';
 import { Product, CartItem } from '@/types';
 import { generateId } from '@/lib/utils';
+import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 
 // Sample products data
 const sampleProducts: Product[] = [
@@ -21,6 +24,9 @@ const sampleProducts: Product[] = [
     description: 'Ultra-soft baby blanket perfect for newborns',
     category: 'nursery',
     inStock: true,
+    age: '0-6 months',
+    size: 'Newborn',
+    color: 'Pink',
   },
   {
     id: '2',
@@ -30,6 +36,9 @@ const sampleProducts: Product[] = [
     description: 'Spacious diaper bag with multiple compartments',
     category: 'clothing',
     inStock: true,
+    age: '1-2 years',
+    size: '1-2 years',
+    color: 'Gray',
   },
   {
     id: '3',
@@ -39,6 +48,9 @@ const sampleProducts: Product[] = [
     description: 'Comfortable romper with adorable animal prints',
     category: 'clothing',
     inStock: true,
+    age: '6-12 months',
+    size: '6-12 months',
+    color: 'Blue',
   },
   {
     id: '4',
@@ -48,6 +60,9 @@ const sampleProducts: Product[] = [
     description: 'Set of 3 BPA-free feeding bottles',
     category: 'feeding',
     inStock: true,
+    age: '0-6 months',
+    size: 'Newborn',
+    color: 'White',
   },
   {
     id: '5',
@@ -57,6 +72,9 @@ const sampleProducts: Product[] = [
     description: 'Colorful educational toys for development',
     category: 'toys',
     inStock: true,
+    age: '2-4 years',
+    size: '2-3 years',
+    color: 'Red',
   },
   {
     id: '6',
@@ -66,6 +84,9 @@ const sampleProducts: Product[] = [
     description: 'Soft hooded towel for bath time',
     category: 'bath',
     inStock: true,
+    age: '0-6 months',
+    size: 'Newborn',
+    color: 'Yellow',
   },
   {
     id: '7',
@@ -75,6 +96,9 @@ const sampleProducts: Product[] = [
     description: 'Lightweight and easy to fold stroller',
     category: 'strollers',
     inStock: true,
+    age: '1-2 years',
+    size: '2-3 years',
+    color: 'Black',
   },
   {
     id: '8',
@@ -84,6 +108,9 @@ const sampleProducts: Product[] = [
     description: 'Digital baby monitor with night vision',
     category: 'electronics',
     inStock: true,
+    age: '2-4 years',
+    size: '3-4 years',
+    color: 'White',
   },
   {
     id: '9',
@@ -93,6 +120,9 @@ const sampleProducts: Product[] = [
     description: 'Accurate digital thermometer for babies',
     category: 'health',
     inStock: true,
+    age: '0-6 months',
+    size: 'Newborn',
+    color: 'Green',
   },
   {
     id: '10',
@@ -102,6 +132,9 @@ const sampleProducts: Product[] = [
     description: 'Orthodontic pacifiers for newborns',
     category: 'feeding',
     inStock: true,
+    age: '0-6 months',
+    size: 'Newborn',
+    color: 'Purple',
   },
   {
     id: '11',
@@ -111,6 +144,21 @@ const sampleProducts: Product[] = [
     description: 'Cozy sleep sack for safe sleeping',
     category: 'clothing',
     inStock: true,
+    age: '6-12 months',
+    size: '6-12 months',
+    color: 'Pink',
+  },
+  {
+    id: '12',
+    name: 'Baby Car Seat - Convertible',
+    price: 320000,
+    image: '/api/placeholder/300/300',
+    description: 'Convertible car seat for growing babies',
+    category: 'strollers',
+    inStock: true,
+    age: '1-2 years',
+    size: '1-2 years',
+    color: 'Brown',
   },
   {
     id: '12',
@@ -120,21 +168,39 @@ const sampleProducts: Product[] = [
     description: 'Colorful floating toys for bath time fun',
     category: 'bath',
     inStock: true,
+    age: '6-12 months',
+    size: '6-12 months',
+    color: 'Red',
   },
 ];
 
-export default function Home() {
+function HomeContent() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isMarzPayOpen, setIsMarzPayOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [products] = useState<Product[]>(sampleProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [filters, setFilters] = useState({
+    age: '',
+    size: '',
+    color: '',
+    category: '',
+  });
 
-  // Filter products based on selected category
-  const filteredProducts = selectedCategory
-    ? products.filter(product => product.category === selectedCategory)
-    : products;
+  const { user, isAuthenticated } = useAuth();
+
+  // Filter products based on selected category and filters
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+    const matchesAge = !filters.age || product.age === filters.age;
+    const matchesSize = !filters.size || product.size === filters.size;
+    const matchesColor = !filters.color || product.color === filters.color;
+    const matchesFilterCategory = !filters.category || product.category === filters.category;
+    
+    return matchesCategory && matchesAge && matchesSize && matchesColor && matchesFilterCategory;
+  });
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -199,11 +265,19 @@ export default function Home() {
   );
 
   const handleCheckout = () => {
+    if (!isAuthenticated) {
+      setIsAuthOpen(true);
+      return;
+    }
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
   };
 
   const handleMarzPayCheckout = () => {
+    if (!isAuthenticated) {
+      setIsAuthOpen(true);
+      return;
+    }
     setIsCartOpen(false);
     setIsMarzPayOpen(true);
   };
@@ -237,9 +311,16 @@ export default function Home() {
         cartItems={cartItems}
         onCartClick={() => setIsCartOpen(true)}
         onCategorySelect={handleCategorySelect}
+        onAuthClick={() => setIsAuthOpen(true)}
       />
-      
-      <main className="container mx-auto px-4 py-8">
+        
+        <main className="container mx-auto px-4 py-8">
+          {/* Product Filter */}
+          <ProductFilter
+            filters={filters}
+            onFiltersChange={setFilters}
+            categories={['feeding', 'clothing', 'toys', 'strollers', 'health', 'bath', 'nursery', 'electronics']}
+          />
         {/* Hero Section */}
         <section className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
@@ -385,7 +466,20 @@ export default function Home() {
         onError={handleMarzPayError}
       />
       
+      <Auth
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+      />
+      
       <WhatsAppButton />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <AuthProvider>
+      <HomeContent />
+    </AuthProvider>
   );
 }

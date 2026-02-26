@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, ChevronDown, LogIn } from 'lucide-react';
 import { CartItem } from '@/types';
 import { formatPrice } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
 
 const CATEGORIES = [
   { id: 'feeding', name: 'Baby Feeding' },
@@ -21,12 +22,14 @@ interface HeaderProps {
   cartItems: CartItem[];
   onCartClick: () => void;
   onCategorySelect?: (categoryId: string) => void;
+  onAuthClick?: () => void;
 }
 
-export default function Header({ cartItems, onCartClick, onCategorySelect }: HeaderProps) {
+export default function Header({ cartItems, onCartClick, onCategorySelect, onAuthClick }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -104,6 +107,31 @@ export default function Header({ cartItems, onCartClick, onCategorySelect }: Hea
             <Link href="/contact" className="text-gray-700 hover:text-pink-600 transition-colors">
               Contact
             </Link>
+
+            {/* User Authentication */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <User className="h-4 w-4 text-gray-600" />
+                  <span className="text-sm text-gray-700">{user?.name}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <LogIn className="h-4 w-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onAuthClick}
+                className="flex items-center space-x-1 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Login</span>
+              </button>
+            )}
           </nav>
 
           {/* Cart and Auth */}

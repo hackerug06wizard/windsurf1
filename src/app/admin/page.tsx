@@ -30,6 +30,9 @@ export default function AdminDashboard() {
     description: '',
     category: '',
     inStock: true,
+    age: '',
+    size: '',
+    color: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
@@ -316,6 +319,58 @@ export default function AdminDashboard() {
                       {CATEGORIES.map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.name}</option>
                       ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Age Range</label>
+                    <select
+                      value={newProduct.age}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, age: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    >
+                      <option value="">Select age range</option>
+                      <option value="0-6 months">0-6 months</option>
+                      <option value="6-12 months">6-12 months</option>
+                      <option value="1-2 years">1-2 years</option>
+                      <option value="2-4 years">2-4 years</option>
+                      <option value="4-6 years">4-6 years</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                    <select
+                      value={newProduct.size}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, size: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    >
+                      <option value="">Select size</option>
+                      <option value="Newborn">Newborn</option>
+                      <option value="0-3 months">0-3 months</option>
+                      <option value="3-6 months">3-6 months</option>
+                      <option value="6-12 months">6-12 months</option>
+                      <option value="1-2 years">1-2 years</option>
+                      <option value="2-3 years">2-3 years</option>
+                      <option value="3-4 years">3-4 years</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                    <select
+                      value={newProduct.color}
+                      onChange={(e) => setNewProduct(prev => ({ ...prev, color: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                    >
+                      <option value="">Select color</option>
+                      <option value="White">White</option>
+                      <option value="Pink">Pink</option>
+                      <option value="Blue">Blue</option>
+                      <option value="Yellow">Yellow</option>
+                      <option value="Green">Green</option>
+                      <option value="Red">Red</option>
+                      <option value="Purple">Purple</option>
+                      <option value="Gray">Gray</option>
+                      <option value="Black">Black</option>
+                      <option value="Brown">Brown</option>
                     </select>
                   </div>
                   <div>

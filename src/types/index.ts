@@ -6,6 +6,9 @@ export interface Product {
   description?: string;
   category?: string;
   inStock: boolean;
+  age?: string;
+  size?: string;
+  color?: string;
 }
 
 export interface CartItem {
@@ -36,6 +39,15 @@ export interface User {
   email: string;
   phone: string;
   password: string;
+  isAdmin?: boolean;
+  createdAt: string;
+}
+
+export interface UserWithoutPassword {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
   isAdmin?: boolean;
   createdAt: string;
 }
