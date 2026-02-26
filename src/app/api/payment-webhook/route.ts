@@ -4,65 +4,105 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Log the webhook data for debugging
-    console.log('Payment webhook received:', body);
+    // Log the webhook for debugging
+    console.log('Marzpay Webhook received:', body);
     
-    // In a real implementation, you would:
-    // 1. Verify the webhook signature (if Marzpay provides one)
-    // 2. Update order status in your database
-    // 3. Send confirmation email to customer
-    // 4. Update inventory
+    // Validate webhook signature (if Marzpay provides one)
+    // TODO: Implement signature validation if available
     
-    // Example webhook structure from Marzpay might include:
-    // - transaction_id
-    // - reference (your order ID)
-    // - status (completed, failed, pending)
-    // - amount
-    // - phone_number
-    
-    const { reference, status, transaction_id, amount } = body;
-    
-    if (status === 'completed') {
-      // Payment successful
-      console.log(`Payment completed for order ${reference}, transaction ID: ${transaction_id}`);
-      
-      // Here you would typically:
-      // 1. Find the order by reference
-      // 2. Update order status to 'paid'
-      // 3. Send confirmation email
-      // 4. Notify admin
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Payment processed successfully' 
-      });
-    } else if (status === 'failed') {
-      // Payment failed
-      console.log(`Payment failed for order ${reference}`);
-      
-      // Handle failed payment
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Payment failed' 
-      });
+    const { 
+      transaction, 
+      collection, 
+      status 
+    } = body;
+
+    // Process different transaction statuses
+    switch (status) {
+      case 'completed':
+        await handleCompletedPayment(transaction, collection);
+        break;
+      case 'failed':
+        await handleFailedPayment(transaction, collection);
+        break;
+      case 'cancelled':
+        await handleCancelledPayment(transaction, collection);
+        break;
+      default:
+        console.log('Unknown payment status:', status);
     }
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Webhook received' 
-    });
+
+    // Return 200 to acknowledge receipt
+    return NextResponse.json({ status: 'received' });
     
   } catch (error) {
     console.error('Webhook error:', error);
     return NextResponse.json(
-      { success: false, error: 'Invalid webhook data' },
-      { status: 400 }
+      { error: 'Webhook processing failed' },
+      { status: 500 }
     );
   }
 }
 
+async function handleCompletedPayment(transaction: any, collection: any) {
+  console.log(`Payment completed: ${transaction.uuid}`);
+  
+  // Here you can:
+  // 1. Update order status in your database
+  // 2. Send confirmation email to customer
+  // 3. Update inventory
+  // 4. Create shipping order
+  // 5. Send notifications
+  
+  // For demo purposes, we'll store in a simple array
+  // In production, use a proper database
+  const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+  const newOrder = {
+    id: transaction.uuid,
+    customerName: 'Customer', // You'd get this from your order form
+    customerEmail: 'customer@example.com', // You'd get this from your order form
+    customerPhone: collection.phone_number,
+    items: [], // You'd get this from your cart
+    total: collection.amount.raw,
+    status: 'completed',
+    createdAt: new Date().toISOString(),
+    provider: collection.provider,
+    transactionReference: transaction.reference,
+  };
+  
+  orders.push(newOrder);
+  localStorage.setItem('orders', JSON.stringify(orders));
+  
+  // TODO: Send email confirmation
+  // TODO: Update inventory
+  // TODO: Notify admin
+}
+
+async function handleFailedPayment(transaction: any, collection: any) {
+  console.log(`Payment failed: ${transaction.uuid}`);
+  
+  // Here you can:
+  // 1. Notify customer of payment failure
+  // 2. Log the failure for analysis
+  // 3. Offer alternative payment methods
+  
+  // TODO: Send failure notification
+}
+
+async function handleCancelledPayment(transaction: any, collection: any) {
+  console.log(`Payment cancelled: ${transaction.uuid}`);
+  
+  // Here you can:
+  // 1. Notify customer of cancellation
+  // 2. Log the cancellation
+  // 3. Offer to retry payment
+  
+  // TODO: Send cancellation notification
+}
+
+// GET method for testing webhook endpoint
 export async function GET() {
   return NextResponse.json({ 
-    message: 'Marzpay webhook endpoint' 
+    status: 'webhook endpoint is active',
+    timestamp: new Date().toISOString()
   });
 }

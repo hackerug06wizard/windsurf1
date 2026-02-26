@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import ProductGrid from '@/components/ProductGrid';
 import Cart from '@/components/Cart';
 import Checkout from '@/components/Checkout';
+import MarzPayPayment from '@/components/MarzPayPayment';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import Categories from '@/components/Categories';
 import { Product, CartItem } from '@/types';
@@ -126,6 +127,7 @@ export default function Home() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isMarzPayOpen, setIsMarzPayOpen] = useState(false);
   const [products] = useState<Product[]>(sampleProducts);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
@@ -190,15 +192,37 @@ export default function Home() {
     );
   };
 
+  // Calculate cart total
+  const cartTotal = cartItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+
   const handleCheckout = () => {
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
+  };
+
+  const handleMarzPayCheckout = () => {
+    setIsCartOpen(false);
+    setIsMarzPayOpen(true);
   };
 
   const handleCheckoutSuccess = () => {
     setIsCheckoutOpen(false);
     setCartItems([]);
     // Show success message or redirect to thank you page
+  };
+
+  const handleMarzPaySuccess = (transactionId: string) => {
+    setIsMarzPayOpen(false);
+    setCartItems([]);
+    // Show success message
+    alert(`Payment successful! Transaction ID: ${transactionId}`);
+  };
+
+  const handleMarzPayError = (error: string) => {
+    alert(`Payment error: ${error}`);
   };
 
   const handleCategorySelect = (categoryId: string) => {
@@ -342,6 +366,7 @@ export default function Home() {
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeFromCart}
         onCheckout={handleCheckout}
+        onMarzPayCheckout={handleMarzPayCheckout}
       />
       
       <Checkout
@@ -349,6 +374,15 @@ export default function Home() {
         onClose={() => setIsCheckoutOpen(false)}
         items={cartItems}
         onSuccess={handleCheckoutSuccess}
+      />
+      
+      <MarzPayPayment
+        isOpen={isMarzPayOpen}
+        onClose={() => setIsMarzPayOpen(false)}
+        items={cartItems}
+        total={cartTotal}
+        onSuccess={handleMarzPaySuccess}
+        onError={handleMarzPayError}
       />
       
       <WhatsAppButton />
