@@ -59,20 +59,26 @@ export default function MarzPayPayment({ isOpen, items, total, onSuccess, onErro
       const formattedPhone = formatPhoneNumber(formData.phone_number);
       const provider = detectProvider(formattedPhone);
       
-      const result = await createCollection({
-        amount: total,
-        phone_number: formattedPhone,
-        country: 'UG',
-        reference: '', // Will be generated automatically
-        description: formData.description,
-        callback_url: 'https://mami-papa-store.onrender.com/api/payment-webhook',
+      // Call our backend API instead of Marzpay directly
+      const response = await fetch('/api/marzpay/collect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: total,
+          phone_number: formattedPhone,
+          description: formData.description,
+        }),
       });
 
-      if (result.status === 'success' && result.data?.transaction) {
-        onSuccess(result.data.transaction.uuid);
+      const result = await response.json();
+
+      if (result.success && result.data.status === 'success' && result.data.data?.transaction) {
+        onSuccess(result.data.data.transaction.uuid);
         onClose();
       } else {
-        onError(result.message || 'Payment failed');
+        onError(result.data?.message || 'Payment failed');
       }
     } catch (error) {
       console.error('Payment error:', error);
