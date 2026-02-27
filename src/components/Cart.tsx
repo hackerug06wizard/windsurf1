@@ -12,7 +12,6 @@ interface CartProps {
   onUpdateQuantity: (productId: string, quantity: number) => void;
   onRemoveItem: (productId: string) => void;
   onCheckout: () => void;
-  onMarzPayCheckout: () => void;
 }
 
 export default function Cart({
@@ -22,7 +21,6 @@ export default function Cart({
   onUpdateQuantity,
   onRemoveItem,
   onCheckout,
-  onMarzPayCheckout,
 }: CartProps) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
@@ -127,14 +125,6 @@ export default function Cart({
                 className="w-full py-3 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isCheckingOut ? 'Processing...' : 'Proceed to Checkout'}
-              </button>
-              
-              <button
-                onClick={onMarzPayCheckout}
-                disabled={isCheckingOut}
-                className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
-              >
-                {isCheckingOut ? 'Processing...' : 'Pay with Mobile Money'}
               </button>
               
               <button

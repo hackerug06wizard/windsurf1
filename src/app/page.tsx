@@ -447,7 +447,6 @@ function HomeContent() {
         onUpdateQuantity={updateQuantity}
         onRemoveItem={removeFromCart}
         onCheckout={handleCheckout}
-        onMarzPayCheckout={handleMarzPayCheckout}
       />
       
       <Checkout
@@ -455,6 +454,7 @@ function HomeContent() {
         onClose={() => setIsCheckoutOpen(false)}
         items={cartItems}
         onSuccess={handleCheckoutSuccess}
+        onMarzPayCheckout={handleMarzPayCheckout}
       />
       
       <MarzPayPayment

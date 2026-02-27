@@ -10,9 +10,10 @@ interface CheckoutProps {
   items: CartItem[];
   onClose: () => void;
   onSuccess: () => void;
+  onMarzPayCheckout: () => void;
 }
 
-export default function Checkout({ isOpen, items, onClose, onSuccess }: CheckoutProps) {
+export default function Checkout({ isOpen, items, onClose, onSuccess, onMarzPayCheckout }: CheckoutProps) {
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -253,7 +254,7 @@ export default function Checkout({ isOpen, items, onClose, onSuccess }: Checkout
           </div>
 
           {/* Footer */}
-          <div className="border-t p-4">
+          <div className="border-t p-4 space-y-3">
             <button
               onClick={handleMarzPay}
               disabled={isProcessing}
@@ -261,8 +262,29 @@ export default function Checkout({ isOpen, items, onClose, onSuccess }: Checkout
             >
               {isProcessing ? 'Processing...' : `Pay ${formatPrice(total)}`}
             </button>
-            <p className="text-xs text-gray-500 text-center mt-2">
-              Payment powered by Marzpay - MTN, Airtel & Bank transfers supported
+            
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">or</span>
+              </div>
+            </div>
+            
+            <button
+              onClick={onMarzPayCheckout}
+              disabled={isProcessing}
+              className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Pay with Mobile Money
+            </button>
+            
+            <p className="text-xs text-gray-500 text-center">
+              Regular checkout: Credit/Debit cards & Bank transfers
+            </p>
+            <p className="text-xs text-gray-500 text-center">
+              Mobile Money: MTN Mobile Money & Airtel Money
             </p>
           </div>
         </div>

@@ -68,7 +68,7 @@ export default function MarzPayPayment({ isOpen, items, total, onSuccess, onErro
         callback_url: 'https://mami-papa-store.onrender.com/api/payment-webhook',
       });
 
-      if (result.status === 'success') {
+      if (result.status === 'success' && result.data?.transaction) {
         onSuccess(result.data.transaction.uuid);
         onClose();
       } else {

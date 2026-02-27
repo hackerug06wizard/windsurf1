@@ -76,6 +76,13 @@ export async function createCollection(request: MarzPayRequest): Promise<MarzPay
       formData.append('callback_url', 'https://mami-papa-store.onrender.com/api/payment-webhook');
     }
 
+    console.log('Creating Marzpay collection with data:', {
+      phone_number: request.phone_number,
+      amount: request.amount,
+      country: request.country,
+      reference: request.reference || generateUUID(),
+    });
+
     const response = await fetch(`${API_BASE_URL}/collect-money`, {
       method: 'POST',
       headers: {
@@ -87,10 +94,12 @@ export async function createCollection(request: MarzPayRequest): Promise<MarzPay
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Marzpay API error response:', errorText);
-      throw new Error(`Marzpay API error: ${response.status} ${response.statusText}`);
+      throw new Error(`Marzpay API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
-    return await response.json();
+    const responseData = await response.json();
+    console.log('Marzpay API response:', responseData);
+    return responseData;
   } catch (error) {
     console.error('Error creating Marzpay collection:', error);
     throw error;

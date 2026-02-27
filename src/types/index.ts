@@ -26,11 +26,18 @@ export interface MarzPayRequest {
 }
 
 export interface MarzPayResponse {
-  success: boolean;
-  transaction_id?: string;
-  status?: string;
+  status: string;
   message?: string;
-  error?: string;
+  data?: {
+    transaction: {
+      uuid: string;
+      reference: string;
+      amount: number;
+      phone_number: string;
+      status: string;
+      created_at: string;
+    };
+  };
 }
 
 export interface User {
