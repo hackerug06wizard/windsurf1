@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { createCollection, validatePhoneNumber, formatPhoneNumber, detectProvider } from '@/lib/marzpay';
+import { useState, useEffect } from 'react';
+import { X, Smartphone, CreditCard, CheckCircle, AlertCircle } from 'lucide-react';
 import { CartItem } from '@/types';
+import { formatPrice, validatePhone, formatPhoneNumber, detectProvider } from '@/lib/utils';
+import { callSupabaseFunction } from '@/lib/supabase';
 
 interface MarzPayPaymentProps {
   isOpen: boolean;
@@ -31,13 +33,13 @@ export default function MarzPayPayment({ isOpen, items, total, onSuccess, onErro
     }
   };
 
-  const validatePhone = () => {
+  const validatePhoneInput = () => {
     if (!formData.phone_number) {
       setPhoneError('Phone number is required');
       return false;
     }
     
-    if (!validatePhoneNumber(formData.phone_number)) {
+    if (!validatePhone(formData.phone_number)) {
       setPhoneError('Please enter a valid Uganda phone number');
       return false;
     }
@@ -49,7 +51,7 @@ export default function MarzPayPayment({ isOpen, items, total, onSuccess, onErro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validatePhone()) {
+    if (!validatePhoneInput()) {
       return;
     }
 
@@ -59,26 +61,23 @@ export default function MarzPayPayment({ isOpen, items, total, onSuccess, onErro
       const formattedPhone = formatPhoneNumber(formData.phone_number);
       const provider = detectProvider(formattedPhone);
       
-      // Call our backend API instead of Marzpay directly
-      const response = await fetch('/api/marzpay/collect', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: total,
-          phone_number: formattedPhone,
-          description: formData.description,
-        }),
+      // Call Supabase Edge Function
+      const { data, error } = await callSupabaseFunction('marzpay-collect', {
+        amount: total,
+        phone_number: formattedPhone,
+        description: formData.description,
       });
 
-      const result = await response.json();
+      if (error || !data) {
+        onError('Payment processing failed. Please try again.');
+        return;
+      }
 
-      if (result.success && result.data.status === 'success' && result.data.data?.transaction) {
-        onSuccess(result.data.data.transaction.uuid);
+      if (data.success && data.data.status === 'success' && data.data.data?.transaction) {
+        onSuccess(data.data.data.transaction.uuid);
         onClose();
       } else {
-        onError(result.data?.message || 'Payment failed');
+        onError(data.data?.message || 'Payment failed');
       }
     } catch (error) {
       console.error('Payment error:', error);
